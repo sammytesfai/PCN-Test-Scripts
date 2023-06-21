@@ -3,7 +3,7 @@ Get the time to fullfill and invoice vs the number of channels used.
 '''
 
 from pyln.client import LightningRpc
-import random, time
+import time
 
 fund_amount = 11275
 invoice_amount = 1000000
@@ -17,7 +17,7 @@ id = getinfo1['id']
 host = getinfo1['binding'][0]['address']
 port = getinfo1['binding'][0]['port']
 
-for i in range(0, 10):
+for i in range(0, 1):
    channel_info = l2.fundchannel(id, amount = fund_amount)
 
    # Identify which peer within nodes list of peers we are currently look at
@@ -39,11 +39,12 @@ for i in range(0, 10):
    while(state != 'CHANNELD_NORMAL'):
       state = l2.listpeers()['peers'][peer_index]['channels'][channel_index]['state']
 
-
    invoice_info1 = l1.invoice(invoice_amount*(i+1), "Payment {}".format(invoice_amount), i+1)
+   payments = []
    
    start_time = time.time()
-   print(l2.pay(invoice_info1['bolt11']))
+   # Divide payment into n numbers of parts, one for each channel
+   # with an equal share of the payment
    print("Time to Pay: {}".format(time.time()-start_time))
 
 l2.close(id)

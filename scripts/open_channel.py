@@ -4,7 +4,7 @@ operational.
 """
 
 from pyln.client import LightningRpc
-import random, time
+import time
 
 
 l1 = LightningRpc("/home/sammy/lightning1/testnet/lightning-rpc")
@@ -42,17 +42,17 @@ for i in range(0,10):
    while(state != 'CHANNELD_NORMAL'):
       state = l2.listpeers()['peers'][peer_index]['channels'][channel_index]['state']
 
-   file = open('open_close.txt', 'a')
+   file = open('data/open_close.txt', 'a')
    file.write('{} '.format(time.time()-start_time))
    file.close()
 
    start_time = time.time()
-   l2.close(id)
+   l2.close(channel_info['channel_id'])
 
    state = l2.listpeers()['peers'][peer_index]['channels'][channel_index]['state']
    while(state != 'ONCHAIN'):
       state = l2.listpeers()['peers'][peer_index]['channels'][channel_index]['state']
 
-   file = open('open_close.txt', 'a')
+   file = open('data/open_close.txt', 'a')
    file.write('{}\n'.format(time.time()-start_time))
    file.close()
